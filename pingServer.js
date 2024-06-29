@@ -48,7 +48,7 @@ function pingGraphQLServer() {
 }
 
 function pingSelf() {
-    const selfUrl = 'your-render-service-url'; 
+    const selfUrl = 'pingserver-httn.onrender.com'; 
     
     console.log(`Pinging self: https://${selfUrl}`);
     
