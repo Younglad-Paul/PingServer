@@ -5,7 +5,7 @@ function pingGraphQLServer() {
         query: `
             query getAllUsers {
                 getAllUsers {
-                    id
+                    userID
                 }
             }
         `
