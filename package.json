@@ -1,0 +1,15 @@
+{
+    "name": "ping-server",
+    "version": "1.0.0",
+    "description": "A script to ping a GraphQL server and keep it active",
+    "main": "pingServer.js",
+    "scripts": {
+      "start": "node pingServer.js"
+    },
+    "dependencies": {
+      "https": "^1.0.0"
+    },
+    "author": "",
+    "license": "ISC"
+  }
+  
