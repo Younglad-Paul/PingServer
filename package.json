@@ -4,12 +4,14 @@
     "description": "A script to ping a GraphQL server and keep it active",
     "main": "pingServer.js",
     "scripts": {
-      "start": "node pingServer.js"
+        "start": "node pingServer.js"
     },
     "dependencies": {
-      "https": "^1.0.0"
+        "dotenv": "^16.4.5",
+        "https": "^1.0.0",
+        "nodemailer": "^6.9.14",
+        "rotating-file-stream": "^3.2.3"
     },
     "author": "",
     "license": "ISC"
-  }
-  
+}

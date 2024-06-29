@@ -1,4 +1,46 @@
 const https = require('https');
+const nodemailer = require('nodemailer');
+const rfs = require('rotating-file-stream');
+const path = require('path');
+require('dotenv').config({ path: '.env.local' });
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.USER, 
+        pass: process.env.PASSWORD
+    }
+});
+
+function sendAlert(message) {
+    const mailOptions = {
+        from: process.env.USER, 
+        to: process.env.USER,
+        subject: 'Ping Failure Alert',
+        text: message
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(`Failed to send alert email: ${error.message}`);
+        } else {
+            console.log('Alert email sent: ' + info.response);
+        }
+    });
+}
+
+
+const logDirectory = path.join(__dirname, 'log');
+const logStream = rfs.createStream('ping_failures.log', {
+    interval: '1d', 
+    size: '10M',    
+    path: logDirectory
+});
+
+function logFailure(message) {
+    const logMessage = `${new Date().toISOString()} - ${message}\n`;
+    logStream.write(logMessage);
+}
 
 function pingGraphQLServer() {
     const data = JSON.stringify({
@@ -34,13 +76,19 @@ function pingGraphQLServer() {
             if (res.statusCode === 200) {
                 console.log('Ping to GraphQL server successful!', responseBody);
             } else {
-                console.log(`Ping to GraphQL server failed with status code: ${res.statusCode}`, responseBody);
+                const errorMessage = `Ping to GraphQL server failed with status code: ${res.statusCode}`;
+                console.log(errorMessage, responseBody);
+                logFailure(errorMessage);
+                sendAlert(errorMessage);
             }
         });
     });
 
     req.on('error', (e) => {
-        console.error(`Ping to GraphQL server failed: ${e.message}`);
+        const errorMessage = `Ping to GraphQL server failed: ${e.message}`;
+        console.error(errorMessage);
+        logFailure(errorMessage);
+        sendAlert(errorMessage);
     });
 
     req.write(data);
@@ -48,7 +96,7 @@ function pingGraphQLServer() {
 }
 
 function pingSelf() {
-    const selfUrl = 'pingserver-httn.onrender.com'; 
+    const selfUrl = 'pingserver-httn.onrender.com';
     
     console.log(`Pinging self: https://${selfUrl}`);
     
@@ -56,10 +104,16 @@ function pingSelf() {
         if (res.statusCode === 200) {
             console.log('Self-ping successful!');
         } else {
-            console.log(`Self-ping failed with status code: ${res.statusCode}`);
+            const errorMessage = `Self-ping failed with status code: ${res.statusCode}`;
+            console.log(errorMessage);
+            logFailure(errorMessage);
+            sendAlert(errorMessage);
         }
     }).on('error', (e) => {
-        console.error(`Self-ping failed: ${e.message}`);
+        const errorMessage = `Self-ping failed: ${e.message}`;
+        console.error(errorMessage);
+        logFailure(errorMessage);
+        sendAlert(errorMessage);
     });
 }
 
