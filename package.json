@@ -2,12 +2,13 @@
     "name": "ping-server",
     "version": "1.0.0",
     "description": "A script to ping a GraphQL server and keep it active",
-    "main": "pingServer.js",
+    "main": "server.js",
     "scripts": {
-        "start": "node pingServer.js"
+        "start": "node server.js"
     },
     "dependencies": {
         "dotenv": "^16.4.5",
+        "express": "^4.19.2",
         "https": "^1.0.0",
         "nodemailer": "^6.9.14",
         "rotating-file-stream": "^3.2.3"
