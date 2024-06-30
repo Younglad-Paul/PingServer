@@ -1,5 +1,5 @@
 const express = require('express');
-const http = require('http'); 
+const http = require('http'); // Use http to ping localhost
 const https = require('https');
 const nodemailer = require('nodemailer');
 const rfs = require('rotating-file-stream');
@@ -7,7 +7,7 @@ const path = require('path');
 require('dotenv').config({ path: '.env.local' });
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; // Use the PORT environment variable or default to 3000
 
 app.get('/', (req, res) => {
     res.send('Server is up and running');
@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-    startPing(); 
+    startPing(); // Start pinging once the server is up
 });
 
 const transporter = nodemailer.createTransport({
