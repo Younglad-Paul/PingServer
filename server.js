@@ -65,7 +65,7 @@ function pingGraphQLServer() {
     });
 
     const options = {
-        hostname: 'aramco-gql.onrender.com',
+        hostname: 'aramco.onrender.com',
         path: '/query',
         method: 'POST',
         headers: {
